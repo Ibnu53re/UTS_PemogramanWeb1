@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tracking Pengiriman - Toko Buku</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Checkout</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="checkout.html">🛒 Checkout</a>
+      <a href="stok.html">📚 Informasi Stok</a>
+      <a href="tracking.html">🚚 Tracking Pengiriman</a>
+      <a href="history.html">💳 History Transaksi</a>
+    </nav>
+  </header>
+
+    <label for="orderSelect">Pilih Pesanan:</label>
+    <select id="orderSelect"></select>
+
+    <div class="tracking-box">
+      <h3 id="statusText">Status pengiriman akan muncul di sini.</h3>
+      <button id="updateStatusBtn" class="login-btn">Ubah Status (Simulasi)</button>
+    </div>
+
+    <button onclick="window.location.href='history.html'" class="login-btn" style="margin-top:15px;">
+      Kembali ke Riwayat
+    </button>
+  </div>
+
+  <script>
+    const select = document.getElementById("orderSelect");
+    const statusText = document.getElementById("statusText");
+    const history = JSON.parse(localStorage.getItem("history")) || [];
+
+    // Isi dropdown
+    history.forEach(order => {
+      const opt = document.createElement("option");
+      opt.value = order.id;
+      opt.textContent = `Pesanan #${order.id} - ${order.nama}`;
+      select.appendChild(opt);
+    });
+
+    select.addEventListener("change", () => {
+      const selected = history.find(h => h.id == select.value);
+      statusText.textContent = `Status: ${selected.status}`;
+    });
+
+    // Tombol simulasi ubah status pengiriman
+    document.getElementById("updateStatusBtn").addEventListener("click", () => {
+      const selectedId = select.value;
+      const idx = history.findIndex(h => h.id == selectedId);
+      if (idx === -1) return alert("Pilih pesanan dulu!");
+
+      let statusNow = history[idx].status;
+      if (statusNow === "Dikemas") statusNow = "Dikirim";
+      else if (statusNow === "Dikirim") statusNow = "Diterima";
+      else statusNow = "Selesai";
+
+      history[idx].status = statusNow;
+      localStorage.setItem("history", JSON.stringify(history));
+      statusText.textContent = `Status: ${statusNow}`;
+      alert(`Status pesanan #${selectedId} diperbarui menjadi "${statusNow}"`);
+    });
+  </script>
+</body>
+</html>

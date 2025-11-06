@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Riwayat Transaksi - Toko Buku</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Checkout</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="checkout.html">🛒 Checkout</a>
+      <a href="stok.html">📚 Informasi Stok</a>
+      <a href="tracking.html">🚚 Tracking Pengiriman</a>
+      <a href="history.html">💳 History Transaksi</a>
+    </nav>
+  </header>
+  
+    <table border="1" cellpadding="10" id="historyTable">
+      <tr>
+        <th>ID</th>
+        <th>Tanggal</th>
+        <th>Nama</th>
+        <th>Total</th>
+        <th>Status</th>
+      </tr>
+    </table>
+
+    <button onclick="window.location.href='tracking.html'" class="login-btn" style="margin-top:15px;">
+      Lacak Pengiriman
+    </button>
+  </div>
+
+  <script>
+    const table = document.getElementById("historyTable");
+    const history = JSON.parse(localStorage.getItem("history")) || [];
+
+    history.forEach(order => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.tanggal}</td>
+        <td>${order.nama}</td>
+        <td>Rp ${order.total.toLocaleString("id-ID")}</td>
+        <td>${order.status}</td>
+      `;
+      table.appendChild(row);
+    });
+  </script>
+</body>
+</html>

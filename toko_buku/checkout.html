@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - Toko Buku</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Checkout</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="checkout.html">🛒 Checkout</a>
+      <a href="stok.html">📚 Informasi Stok</a>
+      <a href="tracking.html">🚚 Tracking Pengiriman</a>
+      <a href="history.html">💳 History Transaksi</a>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <h1> </h1>
+    <form id="checkoutForm">
+      <label>Nama Lengkap</label>
+      <input type="text" id="nama" required>
+
+      <label>Alamat Pengiriman</label>
+      <textarea id="alamat" required></textarea>
+
+      <label>Metode Pembayaran</label>
+      <select id="metode">
+        <option value="Transfer Bank">Transfer Bank</option>
+        <option value="COD">COD (Bayar di Tempat)</option>
+        <option value="E-Wallet">E-Wallet</option>
+      </select>
+
+      <h3 id="totalHarga"></h3>
+      <button type="submit" class="login-btn">Pesan Sekarang</button>
+    </form>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalHarga = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    document.getElementById("totalHarga").textContent = 
+      `Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
+
+    document.getElementById("checkoutForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const order = {
+        id: Date.now(),
+        nama: document.getElementById("nama").value,
+        alamat: document.getElementById("alamat").value,
+        metode: document.getElementById("metode").value,
+        total: totalHarga,
+        items: cart,
+        status: "Dikemas",
+        tanggal: new Date().toLocaleString()
+      };
+
+      let history = JSON.parse(localStorage.getItem("history")) || [];
+      history.push(order);
+      localStorage.setItem("history", JSON.stringify(history));
+      localStorage.removeItem("cart");
+
+      alert("Pesanan berhasil dibuat! Lihat di halaman Riwayat Transaksi.");
+      window.location.href = "history.html";
+    });
+  </script>
+</body>
+</html>
